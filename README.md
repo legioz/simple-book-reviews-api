@@ -1,4 +1,4 @@
-# Book Review
+# Book Reviews API
 
 ## Running project in development
 
