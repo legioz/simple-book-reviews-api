@@ -50,21 +50,8 @@ services:
       - 443:443
     depends_on:
       - back
-  # broker:
-  #   restart: unless-stopped
-  #   image: rabbitmq:3.10.7-management
-  #   volumes:
-  #     - broker_volume:/var/lib/rabbitmq/
-  #   expose:
-  #     - 5673
-  #     - 15672
-  #   ports:
-  #     - 15672:15672
-  #   env_file:
-  #     - ./.env
 volumes:
   postgres_data:
   static_volume:
   media_volume:
   logs_volume:
-  broker_volume:
