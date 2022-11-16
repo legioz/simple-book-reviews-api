@@ -69,7 +69,7 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "01 - User"
+        verbose_name = "02 - Review"
 
     def __str__(self) -> str:
         return f"{self.user}|{self.book_id}"

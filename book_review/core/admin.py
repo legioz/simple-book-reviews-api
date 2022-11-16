@@ -4,8 +4,8 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 
-admin.site.site_header = "LegioFit"
-admin.site.site_title = "LegioFit"
+admin.site.site_header = "Admin"
+admin.site.site_title = "Admin"
 admin.site.index_title = "Welcome Admin"
 admin.site.unregister(Group)
 
@@ -69,4 +69,22 @@ class UserAdmin(BaseUserAdmin):
     ]
     actions = [make_inactive, make_active]
     ordering = ["email"]
+    per_page = 20
+
+
+@admin.register(core_models.Review)
+class WebhookAdmin(admin.ModelAdmin):
+    readonly_fields = ["id", "created_at", "updated_at"]
+    list_display = [
+        "id",
+        "book_id",
+        "user",
+        "rating",
+        "message",
+        "created_at",
+        "updated_at",
+    ]
+    search_fields = ["id", "book_id", "user__email"]
+    list_filter = ["rating"]
+    ordering = ["created_at"]
     per_page = 20
