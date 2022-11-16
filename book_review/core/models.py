@@ -59,8 +59,6 @@ class User(AbstractUser):
         self.save()
 
 
-
-
 class Review(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True)
     book_id = models.IntegerField(blank=False, null=False)

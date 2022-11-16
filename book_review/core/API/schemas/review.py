@@ -3,12 +3,12 @@ import uuid
 from pydantic import conint
 from datetime import datetime, date
 
-    
+
 class ReviewIn(Schema):
     book_id: int
     rating: conint(gt=0, le=5)
     message: str
-    
+
 
 class ReviewOut(ReviewIn):
     id: uuid.UUID | None
@@ -33,6 +33,7 @@ class BookReviewMessageOut(Schema):
     rating: conint(gt=0, le=5) | None
     message: str | None
 
+
 class BookOut(Schema):
     id: int | None
     title: str | None
@@ -41,4 +42,3 @@ class BookOut(Schema):
     download_count: int | None
     rating: float | None
     reviews: list[BookReviewMessageOut] | None
- 

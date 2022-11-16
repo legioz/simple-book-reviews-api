@@ -6,6 +6,7 @@ import logging
 from core.utils.pagination import paginate, LimitOffsetPagination
 import requests
 from django.conf import settings
+
 logger = logging.getLogger("db")
 router = Router()
 
@@ -24,8 +25,6 @@ def create_new_review(request, payload: schemas.ReviewIn):
     except Exception as e:
         logger.exception(e)
         return 400, "Could not create a new review"
-
-
 
 
 @router.get("search", response={200: list[schemas.ReviewOut]})
@@ -60,7 +59,7 @@ def get_book_details(request, id: int):
         reviews = Review.objects.filter(book_id=id)
         details.rating = reviews.aggregate(Avg("rating"))["rating__avg"]
         logger.info(list(reviews.values("message")))
-        details.reviews = list(reviews.values())
+        details.reviews = list(reviews.values("message", "rating", "user_id"))
         return 200, details
     except Exception as e:
         logger.exception(e)
