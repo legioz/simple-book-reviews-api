@@ -280,3 +280,6 @@ job/
 *.crt
 *.csr
 *.ext
+
+media/
+static/
