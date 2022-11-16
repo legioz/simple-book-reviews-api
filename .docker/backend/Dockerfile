@@ -7,6 +7,8 @@ RUN addgroup --system app && adduser --system app --ingroup app
 
 ENV CODE=/code/
 RUN mkdir -p $CODE
+RUN mkdir -p $CODE/book_review/static
+RUN mkdir -p $CODE/book_review/media
 
 WORKDIR $CODE
 
