@@ -1,9 +1,9 @@
-from core.models import User, Review
+from core.models import Review
 from ninja import Router
 from core.API.schemas import review as schemas
 from django.db.models import Avg
 import logging
-from core.utils.pagination import paginate, LimitOffsetPagination
+from core.utils.pagination import paginate, PageNumberPagination
 import requests
 from django.conf import settings
 
@@ -27,26 +27,31 @@ def create_new_review(request, payload: schemas.ReviewIn):
         return 400, "Could not create a new review"
 
 
-@router.get("search", response={200: list[schemas.ReviewOut]})
-@paginate(LimitOffsetPagination)
-def search_for_books(request, payload: schemas.Filters):
+@router.get("search", response={200: list[schemas.BookOutMin]}, auth=None)
+@paginate(PageNumberPagination)
+def search_for_books(request, title_or_author: str = None):
     """
     Search for books
     """
     try:
-        resp = requests.get(settings.GUTENINDEX_BOOKS_URL)
-        if not resp.json():
+        filters = {}
+        filters["page"] = request.GET.get("page")
+        if title_or_author is not None:
+            filters["search"] = title_or_author
+        resp = requests.get(settings.GUTENINDEX_BOOKS_URL, params=filters)
+        if resp.status_code != 200:
             return 400, "Failed fetching data from API"
-        # TODO filter books and build response
-        filters = dict(user=request.user)
-        reviews = Review.objects.filter(**filters).order_by("book_id")
-        return 200, reviews
+        data = resp.json()
+        books = []
+        for book in data["results"]:
+            books.append(schemas.BookOutMin.parse_obj(book))
+        return books
     except Exception as e:
         logger.exception(e)
-        return 400, "Request failed"
+        return 400
 
 
-@router.get("{id}", response={200: schemas.BookOut, 400: str})
+@router.get("{id}", response={200: schemas.BookOut, 400: str}, auth=None)
 def get_book_details(request, id: int):
     """
     Get book details by id

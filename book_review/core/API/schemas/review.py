@@ -17,11 +17,6 @@ class ReviewOut(ReviewIn):
     updated_at: datetime | None
 
 
-class Filters(Schema):
-    title: str | None = None
-    book_id: int | None = None
-
-
 class AuthorOut(Schema):
     name: str | None
     birth_year: date | None
@@ -34,11 +29,14 @@ class BookReviewMessageOut(Schema):
     message: str | None
 
 
-class BookOut(Schema):
+class BookOutMin(Schema):
     id: int | None
     title: str | None
     authors: list[AuthorOut] | None
     languages: list[str] | None
     download_count: int | None
+
+
+class BookOut(BookOutMin):
     rating: float | None
     reviews: list[BookReviewMessageOut] | None

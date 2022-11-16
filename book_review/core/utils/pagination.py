@@ -23,3 +23,21 @@ class LimitOffsetPagination(PaginationBase):
             "items": queryset[offset : offset + limit],
             "count": self._items_count(queryset),
         }
+
+
+class PageNumberPagination(PaginationBase):
+    class Input(Schema):
+        page: int = Field(1, ge=1)
+        page_size: int = Field(settings.PAGINATION_PER_PAGE, ge=1)
+
+    def paginate_queryset(
+        self,
+        queryset: QuerySet,
+        pagination: Input,
+        **params: DictStrAny,
+    ) -> Any:
+        offset = (pagination.page - 1) * pagination.page_size
+        return {
+            "items": queryset[offset : offset + pagination.page_size],
+            "count": self._items_count(queryset),
+        }
